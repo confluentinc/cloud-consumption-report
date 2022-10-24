@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MetricsReport" pageWidth="175" pageHeight="842" columnWidth="175" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="05b12350-122c-46de-8bb3-2d58fcf1acc6">
+	<style name="Sans_Normal" isDefault="true" fontName="Liberation Sans" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Bold" fontName="Liberation Sans" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Italic" fontName="Liberation Sans" fontSize="8" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+	<parameter name="ClusterId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT metrics_name, MAX(metric) as metrics_value,
+		MAX(metrics_limit) as metrics_limit,
+		ROUND(MAX(metric)/MAX(metrics_limit)*100,2) as metrics_percent
+		 FROM cluster_metrics
+		 WHERE cluster_id = $P{ClusterId} GROUP BY cluster_id, metrics_name]]>
+	</queryString>
+	<field name="metrics_name" class="java.lang.String"/>
+	<field name="metrics_value" class="java.math.BigDecimal"/>
+	<field name="metrics_limit" class="java.math.BigDecimal"/>
+	<field name="metrics_percent" class="java.math.BigDecimal"/>
+	<variable name = "max_percent" class = "java.math.BigDecimal" calculation = "Highest">
+		<variableExpression>
+			<![CDATA[$F{metrics_percent}]]>
+		</variableExpression>
+	</variable>
+	<columnHeader>
+		<band height="16">
+			<frame>
+				<reportElement x="0" y="2" width="280" height="14" forecolor="#FFFFFF" backcolor="#142B52" uuid="0419982f-341b-4c98-90f0-87119c7d6f48"/>
+				<box>
+					<pen lineWidth="1.0"/>
+				</box>
+				<staticText>
+					<reportElement style="Sans_Bold" mode="Opaque" x="0" y="0" width="100" height="14" forecolor="#FFFFFF" backcolor="#142B52" uuid="19ba2bb0-44df-4303-bb63-eebba27dc27d"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[  Metrics Name]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Sans_Bold" mode="Opaque" x="100" y="0" width="60" height="14" forecolor="#FFFFFF" backcolor="#142B52" uuid="ea677945-58fb-4595-a5bf-2b3784ae4f0e"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Value]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Sans_Bold" mode="Opaque" x="160" y="0" width="60" height="14" forecolor="#FFFFFF" backcolor="#142B52" uuid="c7049ff9-37dd-433f-958e-9626defb0b01"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Limit]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Sans_Bold" mode="Opaque" x="220" y="0" width="60" height="14" forecolor="#FFFFFF" backcolor="#142B52" uuid="d7049ff9-37dd-433f-958e-9626defb0b01"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Utilization %]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14">
+			<textField>
+				<reportElement x="0" y="2" width="100" height="10" uuid="e9328667-edce-49cd-a5a4-504884a5094f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{metrics_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="2" width="60" height="10" uuid="e1328667-edce-49cd-a5a4-504884a5094f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{metrics_value}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="160" y="2" width="60" height="10" uuid="e2328667-edce-49cd-a5a4-504884a5094f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{metrics_limit}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="220" y="2" width="60" height="10" uuid="e3328667-edce-49cd-a5a4-504884a5094f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{metrics_percent}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,41 @@
+confluent:
+  cloud:
+    organization: ${ORG_NAME}
+    apiKey: ${METRICS_API_KEY}
+    apiSecret: ${METRICS_API_SECRET}
+    cloudEndPoints:
+      environmentList: https://api.confluent.cloud/org/v2/environments?page_size=100
+      clusterList: https://api.confluent.cloud/cmk/v2/clusters?environment=%s&page_size=100
+    metrics:
+      endpoint: https://api.telemetry.confluent.cloud/v2/metrics/cloud/query
+      definitions:
+        - name: "io.confluent.kafka.server/received_bytes"
+          transformation: BYTES_TO_MB_PER_SEC
+          limit: "Ingress (Mb/s)"
+        - name: "io.confluent.kafka.server/sent_bytes"
+          transformation: BYTES_TO_MB_PER_SEC
+          limit: "Egress (Mb/s)"
+        - name: "io.confluent.kafka.server/retained_bytes"
+          transformation: BYTES_TO_GB
+          limit: "Storage (Gb)"
+        - name: "io.confluent.kafka.server/active_connection_count"
+          limit: "Client connections (Count)"
+        - name: "io.confluent.kafka.server/partition_count"
+          limit: "Partitions (Count)"
+        - name: "io.confluent.kafka.server/cluster_load_percent"
+          type: PERCENT
+          limit: "Cluster Load (%)"
+    reporting:
+      outputDir: ${OUTPUT_DIR}/
+      tmpDir: ${TMP_DIR:/tmp}/confluent/
+      limitsFileLocation: classpath:static/CloudLimits.csv
+      confluentLogo: classpath:static/ConfluentLogo.jpeg
+resilience4j:
+  ratelimiter:
+    instances:
+      metrics_rpm_limiter:
+        limitForPeriod: 48
+        limitRefreshPeriod: 1m
+        timeoutDuration: 60s
+
+spring.jpa.hibernate.ddl-auto: create
