@@ -3,7 +3,8 @@ package com.confluent.cloud.reporting.consumption.reports;
 import com.confluent.cloud.reporting.consumption.config.AppConfig;
 import com.confluent.cloud.reporting.consumption.config.AppManager;
 import com.confluent.cloud.reporting.consumption.loader.DataLoader;
-import com.confluent.cloud.reporting.consumption.model.OrgMetrics;
+import com.confluent.cloud.reporting.consumption.repository.ClusterRepository;
+import com.confluent.cloud.reporting.consumption.repository.EnvironmentRepository;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.util.JRSaver;
@@ -35,13 +36,16 @@ public class ReportGenerator implements ApplicationRunner {
     @Autowired
     private AppManager appManager;
     @Autowired
-    private OrgMetrics orgMetrics;
-    @Autowired
     private DataLoader dataLoader;
+    @Autowired
+    private ClusterRepository clusterRepository;
+    @Autowired
+    private EnvironmentRepository environmentRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        dataLoader.loadData();
+        if (appConfig.getReporting().getRefreshData())
+            dataLoader.loadData();
         generateReport();
     }
 
@@ -62,13 +66,15 @@ public class ReportGenerator implements ApplicationRunner {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("Organization", appConfig.getOrganization());
         parameters.put("Logo", copyResourceToTemp(appConfig.getReporting().getConfluentLogo()));
-        parameters.put("OrgMetrics", orgMetrics);
+        parameters.put("ClusterCount", clusterRepository.count());
+        parameters.put("EnvironmentCount", environmentRepository.count());
         return parameters;
     }
 
     private String getCompiledReport() throws Exception {
         compileReport("MetricsReport");
         compileReport("ClusterReport");
+        compileReport("ClusterUtilization");
         return compileReport("MasterReport");
     }
 
@@ -86,7 +92,7 @@ public class ReportGenerator implements ApplicationRunner {
             JRSaver.saveObject(jasperReport, outputPath);
             return outputPath;
         } catch (Exception e) {
-            log.error("Unable to compile jasper report");
+            log.error("Unable to compile jasper report {}", reportName);
             throw e;
         }
     }

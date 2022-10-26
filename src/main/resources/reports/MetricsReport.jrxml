@@ -3,13 +3,40 @@
 	<style name="Sans_Normal" isDefault="true" fontName="Liberation Sans" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<style name="Sans_Bold" fontName="Liberation Sans" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<style name="Sans_Italic" fontName="Liberation Sans" fontSize="8" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+	<style name="UtilizationStyle"
+		   fontName="Liberation Sans"
+		   forecolor="black"
+		   isBlankWhenNull="false"
+		   fontSize="8"
+		   isBold="true" >
+		<conditionalStyle>
+			<conditionExpression>
+				<![CDATA[new Boolean($F{metrics_percent}.compareTo(new BigDecimal(70)) == -1)]]>
+			</conditionExpression>
+			<style forecolor="#028A0F" isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression>
+				<![CDATA[new Boolean($F{metrics_percent}.compareTo(new BigDecimal(90)) == -1)]]>
+			</conditionExpression>
+			<style forecolor="#EC9706" isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression>
+				<![CDATA[new Boolean($F{metrics_percent}.compareTo(new BigDecimal(10000)) == -1)]]>
+			</conditionExpression>
+			<style forecolor="#E3242B" isBold="true"/>
+		</conditionalStyle>
+	</style>
+
 	<parameter name="ClusterId" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT metrics_name, MAX(metric) as metrics_value,
-		MAX(metrics_limit) as metrics_limit,
-		ROUND(MAX(metric)/MAX(metrics_limit)*100,2) as metrics_percent
-		 FROM cluster_metrics
-		 WHERE cluster_id = $P{ClusterId} GROUP BY cluster_id, metrics_name]]>
+		<![CDATA[SELECT cm.metrics_name, MAX(cm.metrics_value) AS metrics_value, MAX(ml.metrics_limit) AS metrics_limit,
+		MAX(cm.metrics_value)/MAX(ml.metrics_limit)*100 AS metrics_percent
+		FROM cluster_metrics cm
+		INNER JOIN cluster cl ON cl.id = cm.cluster_id AND cl.id = $P{ClusterId}
+		INNER JOIN metrics_limit ml ON ml.cku_kind = coalesce(CAST(cl.cku_count AS VARCHAR(10)),cl.kind) AND ml.metrics_name = cm.metrics_name
+		GROUP BY cm.cluster_id, cm.metrics_name]]>
 	</queryString>
 	<field name="metrics_name" class="java.lang.String"/>
 	<field name="metrics_value" class="java.math.BigDecimal"/>
@@ -25,7 +52,7 @@
 			<frame>
 				<reportElement x="0" y="2" width="280" height="14" forecolor="#FFFFFF" backcolor="#142B52" uuid="0419982f-341b-4c98-90f0-87119c7d6f48"/>
 				<box>
-					<pen lineWidth="1.0"/>
+					<pen lineStyle="Solid" lineWidth="1.0"/>
 				</box>
 				<staticText>
 					<reportElement style="Sans_Bold" mode="Opaque" x="0" y="0" width="100" height="14" forecolor="#FFFFFF" backcolor="#142B52" uuid="19ba2bb0-44df-4303-bb63-eebba27dc27d"/>
@@ -68,10 +95,13 @@
 				<textFieldExpression><![CDATA[$F{metrics_limit}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="220" y="2" width="60" height="10" uuid="e3328667-edce-49cd-a5a4-504884a5094f"/>
+				<reportElement style="UtilizationStyle" x="220" y="2" width="60" height="10" uuid="e3328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{metrics_percent}]]></textFieldExpression>
 			</textField>
+			<line>
+				<reportElement x="0" y="12" width="280" height="1" isPrintWhenDetailOverflows="true" forecolor="#142B52" uuid="da93b726-a867-40c7-88d4-be117c8deec1"/>
+			</line>
 		</band>
 	</detail>
 </jasperReport>

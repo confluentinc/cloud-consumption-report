@@ -23,6 +23,5 @@ public class ClusterMetrics {
     private String metricsName;
     @Id
     private LocalDateTime timestamp;
-    private BigDecimal metric;
-    private BigDecimal metricsLimit;
+    private BigDecimal metricsValue;
 }

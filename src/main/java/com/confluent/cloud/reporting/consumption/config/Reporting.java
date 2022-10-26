@@ -7,6 +7,7 @@ import org.springframework.core.io.Resource;
 @Getter
 @Setter
 public class Reporting {
+    private Boolean refreshData = true;
     private String outputDir;
     private String tmpDir;
     private Resource limitsFileLocation;

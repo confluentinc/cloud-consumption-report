@@ -11,21 +11,28 @@ confluent:
       definitions:
         - name: "io.confluent.kafka.server/received_bytes"
           transformation: BYTES_TO_MB_PER_SEC
-          limit: "Ingress (Mb/s)"
+          metricsLimit: "Ingress (Mb/s)"
+          category: Utilization
         - name: "io.confluent.kafka.server/sent_bytes"
           transformation: BYTES_TO_MB_PER_SEC
-          limit: "Egress (Mb/s)"
+          metricsLimit: "Egress (Mb/s)"
+          category: Utilization
         - name: "io.confluent.kafka.server/retained_bytes"
           transformation: BYTES_TO_GB
-          limit: "Storage (Gb)"
+          metricsLimit: "Storage (Gb)"
+          category: Storage
         - name: "io.confluent.kafka.server/active_connection_count"
-          limit: "Client connections (Count)"
+          metricsLimit: "Client connections (Count)"
+          category: Utilization
         - name: "io.confluent.kafka.server/partition_count"
-          limit: "Partitions (Count)"
+          metricsLimit: "Partitions (Count)"
+          category: Utilization
         - name: "io.confluent.kafka.server/cluster_load_percent"
           type: PERCENT
-          limit: "Cluster Load (%)"
+          metricsLimit: "Cluster Load (%)"
+          category: Utilization
     reporting:
+      refreshData: true
       outputDir: ${OUTPUT_DIR}/
       tmpDir: ${TMP_DIR:/tmp}/confluent/
       limitsFileLocation: classpath:static/CloudLimits.csv

@@ -4,9 +4,12 @@
 	<style name="Sans_Bold" fontName="Liberation Sans" fontSize="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<parameter name="Organization" class="java.lang.String"/>
 	<parameter name="Logo" class="java.lang.String"/>
-	<parameter name="OrgMetrics" class="com.confluent.cloud.reporting.consumption.model.OrgMetrics"/>
+	<parameter name="ClusterCount" class="java.lang.Long"/>
+	<parameter name="EnvironmentCount" class="java.lang.Long"/>
 	<queryString>
-		<![CDATA[SELECT id,name, created_date as createDate FROM Environment]]>
+		<![CDATA[SELECT id,name, created_date as createDate
+		FROM Environment
+		ORDER BY name]]>
 	</queryString>
 	<field name="Id"/>
 	<field name="Name"/>
@@ -16,56 +19,88 @@
 		<initialValueExpression><![CDATA[new SimpleDateFormat("dd/MM/yy").format(new Date())]]></initialValueExpression>
 	</variable>
 	<title>
-		<band height="70">
+		<band height="122">
 			<line>
-				<reportElement x="0" y="0" width="515" height="1" uuid="e0ec7d71-dc76-4986-90ac-fa9af901b74d"/>
+				<reportElement x="0" y="0" width="515" height="1" forecolor="#142B52" uuid="e0ec7d71-dc76-4986-90ac-fa9af901b74d"/>
 			</line>
 			<textField evaluationTime="Report">
-				<reportElement style="Sans_Bold" x="400" y="10" width="115" height="10" uuid="e91bf12a-23a3-4fbf-94e8-599618c73376"/>
+				<reportElement style="Sans_Normal" x="400" y="10" width="115" height="15" forecolor="#142B52" uuid="e91bf12a-23a3-4fbf-94e8-599618c73376"/>
 				<textElement textAlignment="Left">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Created Date: " + $V{TodayDate}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement style="Sans_Bold" x="400" y="25" width="115" height="10" uuid="e82bf12a-23a3-4fbf-94e8-599618c73376"/>
+				<reportElement style="Sans_Normal" x="400" y="25" width="115" height="15" forecolor="#142B52" uuid="e82bf12a-23a3-4fbf-94e8-599618c73376"/>
 				<textElement textAlignment="Left">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Environment Count: " + $P{OrgMetrics}.getEnvironmentCount()]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Environment Count: " + $P{EnvironmentCount}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement style="Sans_Bold" x="400" y="40" width="225" height="10" uuid="e82bf12a-23a3-4fbf-94e8-599618c73376"/>
+				<reportElement style="Sans_Normal" x="400" y="40" width="225" height="15" forecolor="#142B52" uuid="e82bf12a-23a3-4fbf-94e8-599618c73376"/>
 				<textElement textAlignment="Left">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Cluster Count: " + $P{OrgMetrics}.getClusterCount()]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Cluster Count: " + $P{ClusterCount}]]></textFieldExpression>
 			</textField>
 			<image>
 				<reportElement x="0" y="10" width="100" height="47"/>
 				<imageExpression><![CDATA[$P{Logo}]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement style="Sans_Normal" x="0" y="10" width="515" height="30" uuid="44eb0c30-969f-4758-961d-9f606cf9bd6a"/>
+				<reportElement style="Sans_Normal" forecolor="#142B52" x="0" y="10" width="515" height="30" uuid="44eb0c30-969f-4758-961d-9f606cf9bd6a"/>
 				<textElement textAlignment="Center">
 					<font size="22"/>
 				</textElement>
 				<text><![CDATA[Organization Report]]></text>
 			</staticText>
 			<textField evaluationTime="Report">
-				<reportElement style="Sans_Normal" x="0" y="40" width="515" height="30" uuid="e81bf12a-23a3-4fbf-94e8-599618c73376"/>
+				<reportElement style="Sans_Normal" forecolor="#142B52" x="0" y="40" width="515" height="30" uuid="e81bf12a-23a3-4fbf-94e8-599618c73376"/>
 				<textElement textAlignment="Center">
 					<font size="18"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Organization}]]></textFieldExpression>
 			</textField>
+			<subreport>
+				<reportElement isPrintRepeatedValues="false" x="5" y="80" width="500" height="20" isRemoveLineWhenBlank="true" backcolor="#FFCC99" uuid="92506c8a-e250-4f4b-826c-693b1df74d11"/>
+				<subreportParameter name="percentCondition">
+					<subreportParameterExpression><![CDATA["> 90"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="order">
+					<subreportParameterExpression><![CDATA["DESC"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="REPORT_COUNT" toVariable="ClusterCount"/>
+				<subreportExpression><![CDATA["ClusterUtilization.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="100" width="500" height="1"></reportElement>
+			</break>
+			<subreport>
+				<reportElement isPrintRepeatedValues="false" x="5" y="101" width="500" height="20" isRemoveLineWhenBlank="true" backcolor="#FFCC99" uuid="92506c8a-e250-5f4b-826c-693b1df74d11"/>
+				<subreportParameter name="percentCondition">
+					<subreportParameterExpression><![CDATA["< 10"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="order">
+					<subreportParameterExpression><![CDATA["ASC"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="REPORT_COUNT" toVariable="ClusterCount"/>
+				<subreportExpression><![CDATA["ClusterUtilization.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="121" width="500" height="1"></reportElement>
+			</break>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="21">
+		<band height="28">
 			<staticText>
-				<reportElement style="Sans_Bold" mode="Opaque" x="0" y="0" width="515" height="15" forecolor="#FFFFFF" backcolor="#142B52" uuid="98ca45a5-349f-4f06-ac2b-7a1e1e5d2930"/>
-				<textElement verticalAlignment="Middle" />
+				<reportElement style="Sans_Normal" mode="Opaque" x="0" y="5" width="500" height="22" forecolor="#FFFFFF" backcolor="#142B52" uuid="98ca45a5-349f-4f06-ac2b-7a1e1e5d2930"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
 				<text><![CDATA[  Environment List]]></text>
 			</staticText>
 		</band>
@@ -73,23 +108,23 @@
 	<detail>
 		<band height="50">
 			<textField evaluationTime="Band">
-				<reportElement style="Sans_Bold" x="5" y="5"  width="350" height="15" forecolor="#007EAF" isPrintWhenDetailOverflows="true" uuid="2c343d22-1686-4fe6-be91-a83597306aeb"/>
+				<reportElement style="Sans_Bold" x="5" y="5"  width="350" height="15" forecolor="#142B52" isPrintWhenDetailOverflows="true" uuid="2c343d22-1686-4fe6-be91-a83597306aeb"/>
 				<textFieldExpression><![CDATA["Name:" + $F{Name} + "  Id:" + $F{Id} + "  Count:" + $V{ClusterCount} + " "]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Sans_Bold" x="350" y="5" width="30" height="15" forecolor="#007EAF" isPrintWhenDetailOverflows="true" uuid="2d343d22-1686-4fe6-be91-a83597306aeb"/>
+				<reportElement style="Sans_Bold" x="350" y="5" width="30" height="15" forecolor="#142B52" isPrintWhenDetailOverflows="true" uuid="2d343d22-1686-4fe6-be91-a83597306aeb"/>
 				<text><![CDATA[Date:]]></text>
 			</staticText>
 			<textField pattern="MM/dd/yyyy">
-				<reportElement style="Sans_Bold" x="380" y="5" width="60" height="15" forecolor="#007EAF" isPrintWhenDetailOverflows="true" uuid="2e343d22-1686-4fe6-be91-a83597306aeb"/>
+				<reportElement style="Sans_Bold" x="380" y="5" width="60" height="15" forecolor="#142B52" isPrintWhenDetailOverflows="true" uuid="2e343d22-1686-4fe6-be91-a83597306aeb"/>
 				<textFieldExpression><![CDATA[$F{CreateDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Sans_Bold"  x="440" y="5" width="40" height="15" forecolor="#007EAF" isPrintWhenDetailOverflows="true" isPrintRepeatedValues="false" uuid="943303c7-3f0b-402a-b8bd-59266af2ea4f"/>
+				<reportElement style="Sans_Bold"  x="440" y="5" width="40" height="15" forecolor="#142B52" isPrintWhenDetailOverflows="true" isPrintRepeatedValues="false" uuid="943303c7-3f0b-402a-b8bd-59266af2ea4f"/>
 				<text><![CDATA[(cont.)]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="20" width="515" height="1" isPrintWhenDetailOverflows="true" uuid="ca93b725-a867-40c7-88d4-be117c8deec1"/>
+				<reportElement x="0" y="20" width="515" height="1" isPrintWhenDetailOverflows="true" forecolor="#142B52" uuid="ca93b725-a867-40c7-88d4-be117c8deec1"/>
 			</line>
 			<subreport>
 				<reportElement isPrintRepeatedValues="false" x="5" y="25" width="500" height="20" isRemoveLineWhenBlank="true" backcolor="#FFCC99" uuid="92506c7a-e250-4f4b-826c-693b1df74d11"/>
@@ -105,7 +140,7 @@
 	<pageFooter>
 		<band height="40">
 			<line>
-				<reportElement x="0" y="10" width="515" height="1" uuid="e7aa0550-b99b-4f3c-80d6-8baabe706e88"/>
+				<reportElement x="0" y="10" width="515" height="1" forecolor="#142B52" uuid="e7aa0550-b99b-4f3c-80d6-8baabe706e88"/>
 			</line>
 			<textField>
 				<reportElement x="200" y="20" width="80" height="15" uuid="7737d093-22a3-402a-898d-3aabb7416b0f"/>

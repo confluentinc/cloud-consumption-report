@@ -13,7 +13,7 @@ public class MetricsLimitLoader {
     @Autowired
     MetricsLimitRepository metricsLimitRepository;
 
-    public void LoadMetrics() {
+    public void loadMetrics() {
         metricsLimitRepository.saveAll(metricsLimitList.getMetricsLimits());
     }
 }
