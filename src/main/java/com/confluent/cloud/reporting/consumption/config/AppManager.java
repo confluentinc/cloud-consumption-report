@@ -24,6 +24,9 @@ public class AppManager {
         SpringApplication.exit(appContext, () -> returnCode);
     }
 
+    public <T> T getBean(String name) {
+        return (T) appContext.getBean(name);
+    }
 
     @PreDestroy
     public void performCleanUp() {

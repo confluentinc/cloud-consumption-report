@@ -4,5 +4,8 @@ import com.confluent.cloud.reporting.consumption.model.entity.ClusterMetrics;
 import com.confluent.cloud.reporting.consumption.model.entity.ClusterMetricsId;
 import org.springframework.data.repository.CrudRepository;
 
-public interface MetricsRepository extends CrudRepository<ClusterMetrics, ClusterMetricsId> {
+public interface ClusterMetricsRepository extends CrudRepository<ClusterMetrics, ClusterMetricsId> {
+    ClusterMetrics findTopByOrderByTimestampAsc();
+
+    ClusterMetrics findTopByOrderByTimestampDesc();
 }

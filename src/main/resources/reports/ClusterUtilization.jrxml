@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ClusterReport" pageWidth="175" pageHeight="842" columnWidth="175" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="05b12350-122c-46de-8bb3-2d58fcf1acc6">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ClusterUtilization" pageWidth="175" pageHeight="700" columnWidth="175" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="05b12350-122c-46de-8bb3-2d58fcf1acc6" whenNoDataType="NoDataSection">
 	<style name="Sans_Normal" isDefault="true" fontName="Liberation Sans" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<style name="Sans_Bold" forecolor="#142B52" fontName="Liberation Sans" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<style name="Sans_Italic" fontName="Liberation Sans" fontSize="8" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
@@ -31,20 +31,20 @@
 	<parameter name="percentCondition" class="java.lang.String"/>
 	<parameter name="order" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select en.id as ENVID, en.name as ENVNAME, cl.id as CLID, cl.name as CLNAME, cl.kind as CLKIND,cl.cku_count as CKU, maxUtilizedCluster.max_metrics_percent
+		<![CDATA[SELECT en.id AS ENVID, en.name AS ENVNAME, cl.id AS CLID, cl.name AS CLNAME, cl.kind AS CLKIND,cl.cku_count AS CKU, maxUtilizedCluster.max_metrics_percent
 		FROM
-		(select metricsData.id,MAX(metricsData.metrics_percent) as max_metrics_percent from
-			(SELECT cl.id,cm.metrics_name,MAX(cm.metrics_value)/MAX(ml.metrics_limit)*100 AS metrics_percent
+		(SELECT metricsData.id,MAX(metricsData.metrics_percent) AS max_metrics_percent from
+			(SELECT cl.id,cm.metrics_name,(MAX(cm.metrics_value) * 100)/MAX(ml.metrics_limit) AS metrics_percent
 					FROM cluster_metrics cm
 					INNER JOIN cluster cl ON cl.id = cm.cluster_id
 					INNER JOIN metrics_limit ml ON ml.cku_kind = COALESCE(CAST(cl.cku_count AS VARCHAR(10)), cl.kind) AND ml.metrics_name = cm.metrics_name
-					WHERE metrics_limit is not null
+					WHERE metrics_limit IS NOT NULL
 					GROUP BY cl.id,cm.metrics_name) metricsData
 			group by metricsData.id) maxUtilizedCluster
-		INNER JOIN cluster cl on maxUtilizedCluster.id = cl.id
-		INNER JOIN environment en on en.id = cl.environment_id
+		INNER JOIN cluster cl ON maxUtilizedCluster.id = cl.id
+		INNER JOIN environment en ON en.id = cl.environment_id
 		WHERE maxUtilizedCluster.max_metrics_percent $P!{percentCondition}
-		order by maxUtilizedCluster.max_metrics_percent $P!{order}]]>
+		ORDER BY maxUtilizedCluster.max_metrics_percent $P!{order}]]>
 	</queryString>
 	<field name="ENVID" class="java.lang.String"/>
 	<field name="ENVNAME" class="java.lang.String"/>
@@ -53,60 +53,52 @@
 	<field name="CLKIND" class="java.lang.String"/>
 	<field name="CKU" class="java.lang.Integer"/>
 	<field name="max_metrics_percent" class="java.math.BigDecimal"/>
-
-	<title>
-		<band height="28">
-			<line>
-				<reportElement x="0" y="0" width="500" height="1" forecolor="#142B52" uuid="e0ec7d72-dc76-4986-90ac-fa9af901b74d"/>
-			</line>
-			<textField evaluationTime="Report">
-				<reportElement style="Sans_Normal" mode="Opaque" x="0" y="6" width="500" height="22" forecolor="#FFFFFF" backcolor="#142B52" uuid="e81bf12a-23a3-4fbf-94e8-599618c73376"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="14"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Cluster Utilization " +  $P{percentCondition} +"%"]]></textFieldExpression>
-			</textField>
-		</band>
-	</title>
 	<pageHeader>
-		<band height="16">
+		<band height="46">
 			<frame>
-				<reportElement x="0" y="2" width="500" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="0419982f-341b-4c98-90f0-87119c7d6f48"/>
+				<reportElement x="0" y="2" width="500" height="42" forecolor="#FFFFFF" backcolor="#006B95" uuid="0419982f-341b-4c98-90f0-87119c7d6f48"/>
 				<box>
 					<pen lineWidth="1.0"/>
 				</box>
+				<textField evaluationTime="Report">
+					<reportElement style="Sans_Normal" mode="Opaque" x="0" y="6" width="500" height="22" forecolor="#FFFFFF" backcolor="#142B52" uuid="e81bf12a-23a3-4fbf-94e8-599618c73376"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Cluster Utilization " +  $P{percentCondition} +"%"]]></textFieldExpression>
+				</textField>
 				<staticText>
-					<reportElement style="Sans_Bold" mode="Opaque" x="0" y="0" width="50" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="19ba2bb0-44df-4303-bb63-eebba27dc27d"/>
+					<reportElement style="Sans_Bold" mode="Opaque" x="0" y="30" width="50" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="19ba2bb0-44df-4303-bb63-eebba27dc27d"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle"/>
 					<text><![CDATA[ Env ID]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Sans_Bold" mode="Opaque" x="50" y="0" width="150" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="ea677945-58fb-4595-a5bf-2b3784ae4f0e"/>
+					<reportElement style="Sans_Bold" mode="Opaque" x="50" y="30" width="140" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="ea677945-58fb-4595-a5bf-2b3784ae4f0e"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle"/>
 					<text><![CDATA[Environment Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Sans_Bold" mode="Opaque" x="200" y="0" width="50" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="c7049ff9-37dd-433f-958e-9626defb0b01"/>
+					<reportElement style="Sans_Bold" mode="Opaque" x="190" y="30" width="50" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="c7049ff9-37dd-433f-958e-9626defb0b01"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle"/>
 					<text><![CDATA[Cluster Id]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Sans_Bold" mode="Opaque" x="250" y="0" width="120" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="d7049ff9-37dd-433f-958e-9626defb0b01"/>
+					<reportElement style="Sans_Bold" mode="Opaque" x="240" y="30" width="140" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="d7049ff9-37dd-433f-958e-9626defb0b01"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle"/>
 					<text><![CDATA[Cluster Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Sans_Bold" mode="Opaque" x="370" y="0" width="40" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="e7049ff9-37dd-433f-958e-9626defb0b01"/>
+					<reportElement style="Sans_Bold" mode="Opaque" x="380" y="30" width="40" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="e7049ff9-37dd-433f-958e-9626defb0b01"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle"/>
 					<text><![CDATA[Kind]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Sans_Bold" mode="Opaque" x="410" y="0" width="25" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="f7049ff9-37dd-433f-958e-9626defb0b01"/>
+					<reportElement style="Sans_Bold" mode="Opaque" x="420" y="30" width="30" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="f7049ff9-37dd-433f-958e-9626defb0b01"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle"/>
 					<text><![CDATA[CKU]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Sans_Bold" mode="Opaque" x="435" y="0" width="65" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="e1049ff9-37dd-433f-958e-9626defb0b01"/>
+					<reportElement style="Sans_Bold" mode="Opaque" x="450" y="30" width="50" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="e1049ff9-37dd-433f-958e-9626defb0b01"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle"/>
 					<text><![CDATA[Utilization]]></text>
 				</staticText>
@@ -121,40 +113,64 @@
 				<textFieldExpression><![CDATA[  $F{ENVID}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Sans_Bold" x="50" y="2" width="150" height="10" uuid="e1328667-edce-49cd-a5a4-504884a5094f"/>
+				<reportElement style="Sans_Bold" x="50" y="2" width="140" height="10" uuid="e1328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{ENVNAME}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Sans_Bold" x="200" y="2" width="50" height="10" uuid="e2328667-edce-49cd-a5a4-504884a5094f"/>
+				<reportElement style="Sans_Bold" x="190" y="2" width="50" height="10" uuid="e2328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{CLID}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Sans_Bold" x="250" y="2" width="120" height="10" uuid="e3328667-edce-49cd-a5a4-504884a5094f"/>
+				<reportElement style="Sans_Bold" x="240" y="2" width="140" height="10" uuid="e3328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{CLNAME}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Sans_Bold" x="370" y="2" width="40" height="10" uuid="e4328667-edce-49cd-a5a4-504884a5094f"/>
+				<reportElement style="Sans_Bold" x="380" y="2" width="40" height="10" uuid="e4328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{CLKIND}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement style="Sans_Bold" x="413" y="2" width="22" height="10" uuid="e5328667-edce-49cd-a5a4-504884a5094f"/>
+				<reportElement style="Sans_Bold" x="425" y="2" width="25" height="10" uuid="e5328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{CKU}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement style="UtilizationStyle" x="435" y="2" width="65" height="15" uuid="e6328667-edce-49cd-a5a4-504884a5094f"/>
+			<textField pattern="0.00'%'">
+				<reportElement style="UtilizationStyle" x="450" y="2" width="50" height="15" uuid="e6328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left">
 					<font size="10" isBold="true" />
 				</textElement>
-				<textFieldExpression><![CDATA[$F{max_metrics_percent} + "%"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{max_metrics_percent}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="0" y="18" width="500" height="1" isPrintWhenDetailOverflows="true" forecolor="#142B52" uuid="da93b725-a867-40c7-88d4-be117c8deec1"/>
 			</line>
 		</band>
 	</detail>
+	<noData>
+		<band height="70">
+			<frame>
+				<reportElement x="0" y="2" width="500" height="42" forecolor="#FFFFFF" backcolor="#006B95" uuid="0419982f-341b-4c98-90f0-87119c7d6f48"/>
+				<box>
+					<pen lineWidth="1.0"/>
+				</box>
+				<textField>
+					<reportElement style="Sans_Normal" mode="Opaque" x="0" y="6" width="500" height="22" forecolor="#FFFFFF" backcolor="#142B52" uuid="e81bf12a-23a3-4fbf-94e8-599618c73376"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Cluster Utilization " +  $P{percentCondition} +"%"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="40" width="500" height="20" forecolor="#142B52"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="12" />
+					</textElement>
+					<text><![CDATA[<< No clusters met the criteria >>]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</noData>
 </jasperReport>

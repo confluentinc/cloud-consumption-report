@@ -1,6 +1,6 @@
 confluent:
   cloud:
-    organization: ${ORG_NAME}
+    organization: ${ORG_NAME:""}
     apiKey: ${METRICS_API_KEY}
     apiSecret: ${METRICS_API_SECRET}
     cloudEndPoints:
@@ -37,12 +37,30 @@ confluent:
       tmpDir: ${TMP_DIR:/tmp}/confluent/
       limitsFileLocation: classpath:static/CloudLimits.csv
       confluentLogo: classpath:static/ConfluentLogo.jpeg
+      reportList:
+        - beanName: jasperPDFGenerator
+          isEnabled: ${GENERATE_PDF:true}
+          args:
+            jasperReportList: MetricsReport,ClusterReport,ClusterUtilization,OrganizationReport,ClusterStorageGrowth
+            mainReportList: OrganizationReport
+        - beanName: sqlCSVGenerator
+          isEnabled: ${GENERATE_CSV:true}
+          args:
+            sqlFileList: OrganizationReport
+
 resilience4j:
   ratelimiter:
     instances:
       metrics_rpm_limiter:
         limitForPeriod: 48
         limitRefreshPeriod: 1m
-        timeoutDuration: 60s
+        timeoutDuration: 1m
 
-spring.jpa.hibernate.ddl-auto: create
+spring:
+  datasource:
+    url: jdbc:hsqldb:mem:testdb
+  jpa:
+    hibernate:
+      generate-ddl: true
+      ddl-auto: update
+

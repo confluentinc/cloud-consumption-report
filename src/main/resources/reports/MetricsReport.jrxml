@@ -32,7 +32,7 @@
 	<parameter name="ClusterId" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT cm.metrics_name, MAX(cm.metrics_value) AS metrics_value, MAX(ml.metrics_limit) AS metrics_limit,
-		MAX(cm.metrics_value)/MAX(ml.metrics_limit)*100 AS metrics_percent
+		(MAX(cm.metrics_value) * 100)/MAX(ml.metrics_limit) AS metrics_percent
 		FROM cluster_metrics cm
 		INNER JOIN cluster cl ON cl.id = cm.cluster_id AND cl.id = $P{ClusterId}
 		INNER JOIN metrics_limit ml ON ml.cku_kind = coalesce(CAST(cl.cku_count AS VARCHAR(10)),cl.kind) AND ml.metrics_name = cm.metrics_name
@@ -48,7 +48,7 @@
 		</variableExpression>
 	</variable>
 	<columnHeader>
-		<band height="16">
+		<band height="16" splitType="Stretch">
 			<frame>
 				<reportElement x="0" y="2" width="280" height="14" forecolor="#FFFFFF" backcolor="#142B52" uuid="0419982f-341b-4c98-90f0-87119c7d6f48"/>
 				<box>
@@ -78,7 +78,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="14">
+		<band height="14" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="2" width="100" height="10" uuid="e9328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
@@ -94,7 +94,7 @@
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{metrics_limit}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isBlankWhenNull="true" pattern="0.00'%'">
 				<reportElement style="UtilizationStyle" x="220" y="2" width="60" height="10" uuid="e3328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{metrics_percent}]]></textFieldExpression>

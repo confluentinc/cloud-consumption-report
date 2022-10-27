@@ -15,21 +15,16 @@ import java.util.List;
 public class DataLoader {
     @Autowired
     ClusterLoader clusterLoader;
-
     @Autowired
     EnvironmentLoader environmentLoader;
     @Autowired
     MetricsLimitLoader metricsLimitLoader;
-
     @Autowired
     MetricsLoader metricsLoader;
-
     @Autowired
     MetricsDefinitionLoader metricsDefinitionLoader;
-
     @Autowired
     ClusterList clusterList;
-
     @Autowired
     EnvironmentList environmentList;
 

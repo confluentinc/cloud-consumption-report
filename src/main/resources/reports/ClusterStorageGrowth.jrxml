@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="StorageGrowth" pageWidth="175" pageHeight="842" columnWidth="175" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="05b12350-122c-46de-8bb3-2d58fcf1acc6">
+	<style name="Sans_Normal" isDefault="true" fontName="Liberation Sans" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Bold" forecolor="#142B52" fontName="Liberation Sans" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Italic" fontName="Liberation Sans" fontSize="8" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+	<style name="UtilizationStyle"
+		   fontName="Liberation Sans"
+		   forecolor="black"
+		   isBlankWhenNull="false"
+		   fontSize="10"
+		   isBold="true">
+		<conditionalStyle>
+			<conditionExpression>
+				<![CDATA[new Boolean($F{growth}.compareTo(new BigDecimal(10)) == -1)]]>
+			</conditionExpression>
+			<style forecolor="#028A0F" isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression>
+				<![CDATA[new Boolean($F{growth}.compareTo(new BigDecimal(25.1)) == -1)]]>
+			</conditionExpression>
+			<style forecolor="#EC9706" isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression>
+				<![CDATA[new Boolean($F{growth}.compareTo(new BigDecimal(10000000)) == -1)]]>
+			</conditionExpression>
+			<style forecolor="#E3242B" isBold="true"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="minDate" class="java.lang.String"/>
+	<parameter name="maxDate" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT cl.ENVIRONMENT_ID AS ENV_ID,cl.ID AS CL_ID, cl.NAME AS CL_NAME, cl.kind AS CL_KIND,cl.cku_count AS CL_CKU,
+				 storageMetrics.earliestValue, storageMetrics.latestValue, storageMetrics.growth
+				 FROM
+					(SELECT earliestMetrics.CLUSTER_ID, earliestMetrics.earliestValue AS earliestValue, latestMetrics.latestValue,
+					(latestMetrics.latestValue - earliestMetrics.earliestValue) * 100/earliestMetrics.earliestValue AS growth
+					FROM
+						(SELECT cm.CLUSTER_ID, cm.METRICS_VALUE AS earliestValue FROM CLUSTER_METRICS cm
+						INNER JOIN (SELECT cm.cluster_id,cm.METRICS_NAME, MIN(cm.TIMESTAMP) AS earliestTimestamp
+						From CLUSTER_METRICS cm INNER JOIN METRICS_DEFINITION md ON cm.METRICS_NAME = md.METRICS_LIMIT
+						WHERE md.CATEGORY='Storage' AND cm.METRICS_VALUE > 0
+						GROUP BY cm.CLUSTER_ID, cm.METRICS_NAME) ecm ON cm.CLUSTER_ID = ecm.CLUSTER_ID
+						AND cm.METRICS_NAME = ecm.METRICS_NAME AND cm.TIMESTAMP = ecm.earliestTimestamp) earliestMetrics
+					INNER JOIN
+						(SELECT cm.CLUSTER_ID, cm.METRICS_VALUE AS latestValue FROM CLUSTER_METRICS cm
+						INNER JOIN (SELECT cm.cluster_id,cm.METRICS_NAME, MAX(cm.timestamp) AS latestTimestamp
+						From CLUSTER_METRICS cm INNER JOIN METRICS_DEFINITION md ON cm.METRICS_NAME = md.METRICS_LIMIT
+						WHERE md.CATEGORY='Storage'
+						GROUP BY cm.CLUSTER_ID, cm.METRICS_NAME) ecm ON cm.CLUSTER_ID = ecm.CLUSTER_ID
+						AND cm.METRICS_NAME = ecm.METRICS_NAME AND cm.TIMESTAMP = ecm.latestTimestamp) latestMetrics
+				ON earliestMetrics.CLUSTER_ID = latestMetrics.CLUSTER_ID
+				ORDER BY growth DESC) storageMetrics
+				INNER JOIN CLUSTER cl ON cl.ID = storageMetrics.CLUSTER_ID]]>
+	</queryString>
+	<field name="ENV_ID" class="java.lang.String"/>
+	<field name="CL_ID" class="java.lang.String"/>
+	<field name="CL_NAME" class="java.lang.String"/>
+	<field name="CL_KIND" class="java.lang.String"/>
+	<field name="CL_CKU" class="java.lang.String"/>
+	<field name="earliestValue" class="java.math.BigDecimal"/>
+	<field name="latestValue" class="java.math.BigDecimal"/>
+	<field name="growth" class="java.math.BigDecimal"/>
+	<pageHeader>
+		<band height="46">
+			<frame>
+				<reportElement x="0" y="2" width="500" height="42" forecolor="#FFFFFF" backcolor="#006B95" uuid="0419982f-341b-4c98-90f0-87119c7d6f48"/>
+				<box>
+					<pen lineWidth="1.0"/>
+				</box>
+				<textField>
+					<reportElement style="Sans_Normal" mode="Opaque" x="0" y="6" width="500" height="22" forecolor="#FFFFFF" backcolor="#142B52" uuid="e81bf12a-23a3-4fbf-94e8-599618c73376"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Storage Growth between " + $P{minDate} + " and " + $P{maxDate}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="Sans_Bold" mode="Opaque" x="0" y="30" width="50" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="19ba2bb0-44df-4303-bb63-eebba27dc27d"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[ ENV Id]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Sans_Bold" mode="Opaque" x="50" y="30" width="50" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="19ba2bb0-44df-4303-bb63-eebba27dc27d"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Cluster Id]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Sans_Bold" mode="Opaque" x="100" y="30" width="140" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="ea677945-58fb-4595-a5bf-2b3784ae4f0e"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Cluster Name]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Sans_Bold" mode="Opaque" x="240" y="30" width="40" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="e7049ff9-37dd-433f-958e-9626defb0b01"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Kind]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Sans_Bold" mode="Opaque" x="280" y="30" width="30" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="f7049ff9-37dd-433f-958e-9626defb0b01"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[CKU]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Sans_Bold" mode="Opaque" x="310" y="30" width="60" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="c7049ff9-37dd-433f-958e-9626defb0b01"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Start (GB)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Sans_Bold" mode="Opaque" x="370" y="30" width="60" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="d7049ff9-37dd-433f-958e-9626defb0b01"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[End (GB)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Sans_Bold" mode="Opaque" x="430" y="30" width="70" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="e1049ff9-37dd-433f-958e-9626defb0b01"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Growth %]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="20">
+			<textField>
+				<reportElement style="Sans_Bold" x="0" y="2" width="50" height="10" uuid="e9328667-edce-49cd-a5a4-504884a5094f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[  $F{ENV_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Sans_Bold" x="50" y="2" width="50" height="10" uuid="e1328667-edce-49cd-a5a4-504884a5094f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{CL_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Sans_Bold" x="100" y="2" width="140" height="10" uuid="e2328667-edce-49cd-a5a4-504884a5094f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{CL_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Sans_Bold" x="240" y="2" width="40" height="10" uuid="e3328667-edce-49cd-a5a4-504884a5094f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{CL_KIND}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="Sans_Bold" x="285" y="2" width="25" height="10" uuid="e4328667-edce-49cd-a5a4-504884a5094f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{CL_CKU}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Sans_Bold" x="310" y="2" width="60" height="10" uuid="e5328668-edce-49cd-a5a4-504884a5094f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{earliestValue}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Sans_Bold" x="370" y="2" width="60" height="10" uuid="e5328669-edce-49cd-a5a4-504884a5094f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{latestValue}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.00'%'">
+				<reportElement style="UtilizationStyle" x="430" y="2" width="70" height="15" uuid="e6328667-edce-49cd-a5a4-504884a5094f"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true" />
+				</textElement>
+				<textFieldExpression><![CDATA[$F{growth}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="18" width="500" height="1" isPrintWhenDetailOverflows="true" forecolor="#142B52" uuid="da93b725-a867-40c7-88d4-be117c8deec1"/>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

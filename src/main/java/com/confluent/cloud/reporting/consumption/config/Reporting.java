@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.core.io.Resource;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class Reporting {
@@ -12,4 +14,5 @@ public class Reporting {
     private String tmpDir;
     private Resource limitsFileLocation;
     private Resource confluentLogo;
+    private List<Report> reportList;
 }

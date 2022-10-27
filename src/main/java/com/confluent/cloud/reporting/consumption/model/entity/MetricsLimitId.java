@@ -1,9 +1,6 @@
 package com.confluent.cloud.reporting.consumption.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -11,6 +8,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 public class MetricsLimitId implements Serializable {
     private String cku_kind;
     private String metrics_name;

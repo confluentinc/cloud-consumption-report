@@ -46,7 +46,7 @@
 	<field name="CreateDate" class="java.sql.Timestamp"/>
 	<variable name="MaxUtilization" class="java.math.BigDecimal" calculation="System" resetGroup=""/>
 	<detail>
-	<band height="16">
+	<band height="114" splitType="Stretch">
 			<frame>
 				<reportElement x="0" y="2" width="500" height="14" forecolor="#FFFFFF" backcolor="#006B95" uuid="0419982f-341b-4c98-90f0-87119c7d6f48"/>
 				<box>
@@ -93,55 +93,51 @@
 					<text><![CDATA[Create Date]]></text>
 				</staticText>
 			</frame>
-		</band>
-		<band height="20">
 			<textField>
-				<reportElement style="Sans_Bold" x="0" y="2" width="50" height="10" uuid="e9328667-edce-49cd-a5a4-504884a5094f"/>
+				<reportElement style="Sans_Bold" x="0" y="18" width="50" height="10" uuid="e9328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[  $F{Id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Sans_Bold" x="50" y="2" width="150" height="10" uuid="e1328667-edce-49cd-a5a4-504884a5094f"/>
+				<reportElement style="Sans_Bold" x="50" y="18" width="150" height="10" uuid="e1328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{Name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Sans_Bold" x="200" y="2" width="50" height="10" uuid="e2328667-edce-49cd-a5a4-504884a5094f"/>
+				<reportElement style="Sans_Bold" x="200" y="18" width="50" height="10" uuid="e2328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{Kind}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Sans_Bold" x="250" y="2" width="30" height="10" uuid="e3328667-edce-49cd-a5a4-504884a5094f"/>
+				<reportElement style="Sans_Bold" x="250" y="18" width="30" height="10" uuid="e3328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{CKU}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Sans_Bold" x="280" y="2" width="40" height="10" uuid="e4328667-edce-49cd-a5a4-504884a5094f"/>
+				<reportElement style="Sans_Bold" x="280" y="18" width="40" height="10" uuid="e4328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{Cloud}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Sans_Bold" x="320" y="2" width="60" height="10" uuid="e5328667-edce-49cd-a5a4-504884a5094f"/>
+				<reportElement style="Sans_Bold" x="320" y="18" width="60" height="10" uuid="e5328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{Availability}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Sans_Bold" x="380" y="2" width="70" height="10" uuid="e6328667-edce-49cd-a5a4-504884a5094f"/>
+				<reportElement style="Sans_Bold" x="380" y="18" width="70" height="10" uuid="e6328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{Region}]]></textFieldExpression>
 			</textField>
 			<textField pattern="MM/dd/yyyy">
-				<reportElement style="Sans_Bold" x="450" y="2" width="70" height="10" uuid="e7328667-edce-49cd-a5a4-504884a5094f"/>
+				<reportElement style="Sans_Bold" x="450" y="18" width="70" height="10" uuid="e7328667-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{CreateDate}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="18" width="500" height="1" isPrintWhenDetailOverflows="true" forecolor="#142B52" uuid="da93b725-a867-40c7-88d4-be117c8deec1"/>
+				<reportElement x="0" y="30" width="500" height="1" isPrintWhenDetailOverflows="true" forecolor="#142B52" uuid="da93b725-a867-40c7-88d4-be117c8deec1"/>
 			</line>
-		</band>
-		<band height="80">
 			<subreport>
-				<reportElement isPrintRepeatedValues="false" x="5" y="0" width="300" height="80" isRemoveLineWhenBlank="true" backcolor="#FFCC99" uuid="92506c7a-e250-4f4b-826c-693b1df74d11"/>
+				<reportElement isPrintRepeatedValues="false" x="5" y="34" width="300" height="80" isRemoveLineWhenBlank="true" backcolor="#FFCC99" uuid="92506c7a-e250-4f4b-826c-693b1df74d11"/>
 				<subreportParameter name="ClusterId">
 					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -149,12 +145,12 @@
 				<returnValue subreportVariable="max_percent" toVariable="MaxUtilization"/>
 				<subreportExpression><![CDATA["MetricsReport.jasper"]]></subreportExpression>
 			</subreport>
-			<textField evaluationTime="Band">
-				<reportElement style="UtilizationStyle" x="330" y="20" width="130" height="60" uuid="e9328668-edce-49cd-a5a4-504884a5094f"/>
+			<textField evaluationTime="Band" pattern="0.00'%'" isBlankWhenNull="true">
+				<reportElement style="UtilizationStyle" x="330" y="54" width="130" height="60" uuid="e9328668-edce-49cd-a5a4-504884a5094f"/>
 				<textElement textAlignment="Center">
 					<font size="30" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{MaxUtilization} + "%"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{MaxUtilization}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

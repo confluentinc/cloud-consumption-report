@@ -1,9 +1,6 @@
 package com.confluent.cloud.reporting.consumption.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 public class ClusterMetricsId implements Serializable {
     private String clusterId;
     private String metricsName;
