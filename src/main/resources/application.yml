@@ -28,7 +28,7 @@ confluent:
           metricsLimit: "Partitions (Count)"
           category: Utilization
         - name: "io.confluent.kafka.server/cluster_load_percent"
-          type: PERCENT
+          transformation: PERCENT
           metricsLimit: "Cluster Load (%)"
           category: Utilization
     reporting:
@@ -58,7 +58,7 @@ resilience4j:
 
 spring:
   datasource:
-    url: jdbc:hsqldb:mem:testdb
+    url: jdbc:hsqldb:hsql://localhost/test
   jpa:
     hibernate:
       generate-ddl: true
