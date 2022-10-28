@@ -58,7 +58,7 @@ resilience4j:
 
 spring:
   datasource:
-    url: jdbc:hsqldb:hsql://localhost/test
+    url: jdbc:hsqldb:mem:testdb
   jpa:
     hibernate:
       generate-ddl: true
