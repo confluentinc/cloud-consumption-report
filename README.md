@@ -1,8 +1,8 @@
 # Overview
-Project used for generating a PDF/CSV Reports at organization level for Confluent cloud for measuring the cluster usage over the period of past 7 days.
-Application integrates with Service Quotas API and Metrics API and retrieves environment and cluster configuration in confluent cloud. 
-For each cluster metrics are queried using metrics api which is rate limited to 50 requests per min and loads it into in-memory database. 
-Compares the metrics result with the benchmark limits based on the cluster kind and resource allocation and provides the consumption jasperReports.
+Project used for generating a PDF/CSV Reports at organization level for Confluent cloud to measure/monitor the cluster usage over the period of past 7 days.
+Application integrates with Service Quotas API and Metrics API and retrieves environment and cluster configuration from confluent cloud. 
+For each cluster metrics are queried using Metrics API which is rate limited to 50 requests per min and loads it into in-memory database. 
+Compares the metrics result with the benchmark limits based on the cluster type and resource allocation and provides the consumption Reports.
 
 ## Report Contents
 
