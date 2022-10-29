@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EnvironmentReport" pageWidth="595" pageHeight="700" columnWidth="515" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0bb3792b-2400-4fdf-b19f-7928164e6ce1">
+	<style name="Sans_Normal" isDefault="true" fontName="Liberation Sans" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Bold" fontName="Liberation Sans" fontSize="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<parameter name="minDate" class="java.lang.String"/>
+	<parameter name="maxDate" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT id,name, created_date as createDate
+		FROM Environment
+		ORDER BY name]]>
+	</queryString>
+	<field name="Id"/>
+	<field name="Name"/>
+	<field name="CreateDate" class="java.sql.Timestamp"/>
+	<variable name="ClusterCount" class="java.lang.Integer" calculation="System"/>
+	<pageHeader>
+		<band height="28">
+			<staticText>
+				<reportElement style="Sans_Normal" mode="Opaque" x="0" y="5" width="515" height="22" forecolor="#FFFFFF" backcolor="#142B52" uuid="98ca45a5-349f-4f06-ac2b-7a1e1e5d2930"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[  Environment Detail Usage]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="140" splitType="Stretch">
+			<textField evaluationTime="Band">
+				<reportElement style="Sans_Bold" x="5" y="5"  width="350" height="15" forecolor="#142B52" isPrintWhenDetailOverflows="true" uuid="2c343d22-1686-4fe6-be91-a83597306aeb"/>
+				<textFieldExpression><![CDATA["Name:" + $F{Name} + "    Id:" + $F{Id} + "    Count:" + $V{ClusterCount} + " "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Sans_Bold" x="350" y="5" width="70" height="15" forecolor="#142B52" isPrintWhenDetailOverflows="true" uuid="2d343d22-1686-4fe6-be91-a83597306aeb"/>
+				<text><![CDATA[Create Date:]]></text>
+			</staticText>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement style="Sans_Bold" x="420" y="5" width="60" height="15" forecolor="#142B52" isPrintWhenDetailOverflows="true" uuid="2e343d22-1686-4fe6-be91-a83597306aeb"/>
+				<textFieldExpression><![CDATA[$F{CreateDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Sans_Bold"  x="480" y="5" width="35" height="15" forecolor="#142B52" isPrintWhenDetailOverflows="true" isPrintRepeatedValues="false" uuid="943303c7-3f0b-402a-b8bd-59266af2ea4f"/>
+				<text><![CDATA[(cont.)]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="20" width="515" height="1" isPrintWhenDetailOverflows="true" forecolor="#142B52" uuid="ca93b725-a867-40c7-88d4-be117c8deec1"/>
+			</line>
+			<subreport>
+				<reportElement isPrintRepeatedValues="false" x="5" y="25" width="500" height="115" isRemoveLineWhenBlank="true" backcolor="#FFCC99" uuid="92506c7a-e250-4f4b-826c-693b1df74d11"/>
+				<subreportParameter name="EnvId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="REPORT_COUNT" toVariable="ClusterCount"/>
+				<subreportExpression><![CDATA["ClusterReport.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

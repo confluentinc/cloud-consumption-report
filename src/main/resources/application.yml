@@ -41,7 +41,7 @@ confluent:
         - beanName: jasperPDFGenerator
           isEnabled: ${GENERATE_PDF:true}
           args:
-            jasperReportList: MetricsReport,ClusterReport,ClusterUtilization,OrganizationReport,ClusterStorageGrowth
+            jasperReportList: MetricsReport,ClusterReport,ClusterUtilization,ClusterStorageGrowth,EnvironmentReport,OrganizationReport
             mainReportList: OrganizationReport
         - beanName: sqlCSVGenerator
           isEnabled: ${GENERATE_CSV:true}
