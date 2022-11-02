@@ -100,4 +100,4 @@ spring:
     username: user
     password: password
 ```
-3. Make sure the application is scheduled to run atleast once every 7 days to avoid gaps in data reported.
+3. Make sure the application is scheduled to run atleast once every 15 days to avoid gaps in data reported.
