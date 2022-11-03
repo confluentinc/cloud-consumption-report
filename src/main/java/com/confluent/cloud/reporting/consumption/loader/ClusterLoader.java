@@ -12,7 +12,8 @@ public class ClusterLoader {
     @Autowired
     ClusterRepository clusterRepository;
 
-    public void loadCluster(List<Cluster> clusters) {
+    public void loadCluster(List<Cluster> clusters, String environmentId) {
+        clusterRepository.deleteAll(clusterRepository.findAllByEnvironmentId(environmentId));
         clusterRepository.saveAll(clusters);
     }
 }

@@ -35,7 +35,7 @@ public class DataLoader {
         environmentLoader.loadEnvironments(environments);
         environments.forEach(e -> {
             List<Cluster> clusters = clusterList.getClusters(e.getId());
-            clusterLoader.loadCluster(clusters);
+            clusterLoader.loadCluster(clusters, e.getId());
             clusters.forEach(cluster -> {
                 log.info("Processing Environment {}, Cluster: {}", e.getName(), cluster.getName());
                 metricsLoader.loadMetrics(cluster);

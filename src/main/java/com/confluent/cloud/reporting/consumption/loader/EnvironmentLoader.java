@@ -14,6 +14,7 @@ public class EnvironmentLoader {
     EnvironmentRepository environmentRepository;
 
     public void loadEnvironments(List<Environment> environments) {
+        environmentRepository.deleteAll();
         environmentRepository.saveAll(environments);
     }
 }
