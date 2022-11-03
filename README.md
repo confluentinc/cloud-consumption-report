@@ -19,8 +19,9 @@ Create the following environment variables:
 3. METRICS_API_SECRET - Cloud API secret 
 4. OUTPUT_DIR - Output directory where the jasperReports will be generated.
 5. TMP_DIR - Temporary directory path defaults to /tmp (Optional)
-6. GENERATE_CSV - To enable csv generation to the output directory defaults to true (Optional)
-7. GENERATE_PDF - To enable pdf generation to the output directory defaults to true (Optional)
+6. GENERATE_CSV - To enable csv generation to the output directory, defaults to true (Optional)
+7. GENERATE_PDF - To enable pdf generation to the output directory, defaults to true (Optional)
+8. DATA_RETENTION_DAYS - No of days of metrics data to be retained, defaults to 30 (Optional). Only applicable if you use persistent data store.
 ### Execution:
 
 #### Option 1:

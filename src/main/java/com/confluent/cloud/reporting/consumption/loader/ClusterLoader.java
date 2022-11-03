@@ -13,7 +13,7 @@ public class ClusterLoader {
     ClusterRepository clusterRepository;
 
     public void loadCluster(List<Cluster> clusters, String environmentId) {
-        clusterRepository.deleteAll(clusterRepository.findAllByEnvironmentId(environmentId));
+        clusterRepository.deleteAllByEnvironmentId(environmentId);
         clusterRepository.saveAll(clusters);
     }
 }

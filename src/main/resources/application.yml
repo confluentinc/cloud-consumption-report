@@ -33,6 +33,7 @@ confluent:
           category: Utilization
     reporting:
       refreshData: true
+      dataRetentionDays: ${DATA_RETENTION_DAYS:30}
       outputDir: ${OUTPUT_DIR}/
       tmpDir: ${TMP_DIR:/tmp}/confluent/
       limitsFileLocation: classpath:static/CloudLimits.csv

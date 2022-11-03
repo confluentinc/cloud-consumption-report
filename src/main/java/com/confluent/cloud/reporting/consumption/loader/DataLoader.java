@@ -29,6 +29,7 @@ public class DataLoader {
     EnvironmentList environmentList;
 
     public void loadData() {
+        metricsLoader.purgeOldMetrics();
         metricsDefinitionLoader.loadMetricsDefinitions();
         metricsLimitLoader.loadMetrics();
         List<Environment> environments = environmentList.getEnvironments();

@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 public class Reporting {
     private Boolean refreshData = true;
+    private Integer dataRetentionDays;
     private String outputDir;
     private String tmpDir;
     private Resource limitsFileLocation;
