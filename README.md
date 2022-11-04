@@ -32,11 +32,11 @@ mvn clean install
 ```
 - Create Docker Image
 ``` SHELL
-docker build -t confluent/cloud-consumption-jasperReports .
+docker build -t confluent/cloud-consumption-report .
 ```
 - Run Docker Container
 ``` SHELL
-docker run -v ${OUTPUT_DIR}:/output -e "ORG_NAME=${ORG_NAME}" -e "METRICS_API_KEY=${METRICS_API_KEY}" -e "METRICS_API_SECRET=${METRICS_API_SECRET}" -e "OUTPUT_DIR=/output" -t confluent/cloud-consumption-jasperReports
+docker run -v ${OUTPUT_DIR}:/output -e "ORG_NAME=${ORG_NAME}" -e "METRICS_API_KEY=${METRICS_API_KEY}" -e "METRICS_API_SECRET=${METRICS_API_SECRET}" -e "OUTPUT_DIR=/output" -t confluent/cloud-consumption-report
 ```
 #### Option 2:
 - Check out the code

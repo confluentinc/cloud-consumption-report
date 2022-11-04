@@ -9,10 +9,10 @@
         <relativePath/>
     </parent>
     <groupId>com.confluent.cloud.reporting</groupId>
-    <artifactId>cloud-consumption-jasperReports</artifactId>
+    <artifactId>cloud-consumption-report</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>cloud-consumption-jasperReports</name>
-    <description>For confluent cloud organization jasperReports on usage</description>
+    <name>cloud-consumption-report</name>
+    <description>For confluent cloud organization report on usage</description>
     <properties>
         <java.version>17</java.version>
         <jasper.version>6.20.0</jasper.version>
