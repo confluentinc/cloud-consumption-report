@@ -8,4 +8,5 @@ import lombok.Setter;
 public class CloudEndPoints {
     private String environmentList;
     private String clusterList;
+    private String srList;
 }

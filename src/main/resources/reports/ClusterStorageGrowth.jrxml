@@ -50,9 +50,8 @@
 						WHERE md.CATEGORY='Storage'
 						GROUP BY cm.CLUSTER_ID, cm.METRICS_NAME) ecm ON cm.CLUSTER_ID = ecm.CLUSTER_ID
 						AND cm.METRICS_NAME = ecm.METRICS_NAME AND cm.TIMESTAMP = ecm.latestTimestamp) latestMetrics
-				ON earliestMetrics.CLUSTER_ID = latestMetrics.CLUSTER_ID
-				ORDER BY growth DESC) storageMetrics
-				INNER JOIN CLUSTER cl ON cl.ID = storageMetrics.CLUSTER_ID]]>
+				ON earliestMetrics.CLUSTER_ID = latestMetrics.CLUSTER_ID) storageMetrics
+				INNER JOIN CLUSTER cl ON cl.ID = storageMetrics.CLUSTER_ID ORDER BY growth DESC]]>
 	</queryString>
 	<field name="ENV_ID" class="java.lang.String"/>
 	<field name="CL_ID" class="java.lang.String"/>

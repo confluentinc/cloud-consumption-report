@@ -1,6 +1,6 @@
 package com.confluent.cloud.reporting.consumption.model.rest;
 
-import com.confluent.cloud.reporting.consumption.model.ClusterType;
+import com.confluent.cloud.reporting.consumption.model.KafkaClusterType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +10,6 @@ import java.util.List;
 @Setter
 public class ClusterConfig {
     private Integer cku;
-    private ClusterType kind;
+    private KafkaClusterType kind;
     private List<String> zones;
 }

@@ -14,6 +14,11 @@ public class MetricsDefinitionLoader {
     MetricsDefinitionRepository metricsDefinitionRepository;
 
     public void loadMetricsDefinitions() {
-        metricsDefinitionRepository.saveAll(appConfig.getMetrics().getDefinitions());
+        appConfig.getMetrics().getDefinitions().forEach((ct, mds) -> {
+            mds.forEach(md -> {
+                md.setClusterType(ct);
+                metricsDefinitionRepository.save(md);
+            });
+        });
     }
 }

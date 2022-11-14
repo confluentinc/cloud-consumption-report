@@ -1,7 +1,8 @@
 package com.confluent.cloud.reporting.consumption.model;
 
 public enum ClusterType {
-    Basic,
-    Standard,
-    Dedicated
+    kafka,
+    schema_registry,
+    Ksql,
+    Connector
 }

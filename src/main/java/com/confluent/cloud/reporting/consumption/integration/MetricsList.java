@@ -2,7 +2,7 @@ package com.confluent.cloud.reporting.consumption.integration;
 
 import com.confluent.cloud.reporting.consumption.config.AppConfig;
 import com.confluent.cloud.reporting.consumption.config.MetricsTransformation;
-import com.confluent.cloud.reporting.consumption.model.entity.Cluster;
+import com.confluent.cloud.reporting.consumption.model.ClusterType;
 import com.confluent.cloud.reporting.consumption.model.entity.ClusterMetrics;
 import com.confluent.cloud.reporting.consumption.model.entity.MetricsDefinition;
 import com.confluent.cloud.reporting.consumption.model.rest.*;
@@ -30,14 +30,14 @@ public class MetricsList {
     }
 
     @RateLimiter(name = "metrics_rpm_limiter")
-    public List<ClusterMetrics> getMetrics(MetricsDefinition metricsDefinition, Cluster cluster) {
+    public List<ClusterMetrics> getMetrics(MetricsDefinition metricsDefinition, String clusterId, ClusterType clusterType) {
         ResponseWrapper<MetricsResponse> metricsResponse = restTemplate.exchange(appConfig.getMetrics().getEndPoint(),
                 HttpMethod.POST,
-                new HttpEntity<>(createMetricsRequest(metricsDefinition.getName(), cluster.getId())),
+                new HttpEntity<>(createMetricsRequest(metricsDefinition.getName(), clusterId, clusterType)),
                 new ParameterizedTypeReference<ResponseWrapper<MetricsResponse>>() {
                 }).getBody();
         return metricsResponse.getData().stream().map(er -> ClusterMetrics.builder()
-                .clusterId(cluster.getId())
+                .clusterId(clusterId)
                 .metricsName(metricsDefinition.getMetricsLimit())
                 .timestamp(er.getTimestamp())
                 .metricsValue(performTransformation(er.getValue(), metricsDefinition.getTransformation()))
@@ -60,7 +60,7 @@ public class MetricsList {
         }
     }
 
-    private MetricsRequest createMetricsRequest(String metricName, String clusterId) {
+    private MetricsRequest createMetricsRequest(String metricName, String clusterId, ClusterType clusterType) {
         List<MetricsAggregation> metricsAggregationList = new ArrayList<>();
         metricsAggregationList.add(MetricsAggregation.builder().metric(metricName).build());
         List<String> intervals = new ArrayList<>();
@@ -69,7 +69,7 @@ public class MetricsList {
                 .aggregations(metricsAggregationList)
                 .filter(MetricsFilter.builder()
                         .op(MetricsFilterOp.EQ)
-                        .field("resource.kafka.id")
+                        .field(String.format("resource.%s.id", clusterType.name()))
                         .value(clusterId)
                         .build())
                 .granularity(MetricsGranularity.PT1H)

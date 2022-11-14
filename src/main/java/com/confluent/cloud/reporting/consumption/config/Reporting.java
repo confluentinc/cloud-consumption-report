@@ -14,6 +14,7 @@ public class Reporting {
     private String outputDir;
     private String tmpDir;
     private Resource limitsFileLocation;
+    private Resource srLimitsFileLocation;
     private Resource confluentLogo;
     private List<Report> reportList;
 }

@@ -1,8 +1,6 @@
 package com.confluent.cloud.reporting.consumption.model.entity;
 
-import com.confluent.cloud.reporting.consumption.model.Availability;
-import com.confluent.cloud.reporting.consumption.model.Cloud;
-import com.confluent.cloud.reporting.consumption.model.KafkaClusterType;
+import com.confluent.cloud.reporting.consumption.model.SRClusterType;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -18,19 +16,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class Cluster {
+public class SRCluster {
     @Id
     private String id;
-    private String name;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
     @Enumerated(EnumType.STRING)
-    private KafkaClusterType kind;
-    private Integer ckuCount;
-    @Enumerated(EnumType.STRING)
-    private Cloud cloud;
-    @Enumerated(EnumType.STRING)
-    private Availability availability;
-    private String region;
+    private SRClusterType kind;
     private String environmentId;
 }

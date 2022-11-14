@@ -9,9 +9,9 @@
 	<parameter name="minDate" class="java.lang.String"/>
 	<parameter name="maxDate" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select top 1 name from environment]]>
+		<![CDATA[select id from environment limit 1]]>
 	</queryString>
-	<field name="Name"/>
+	<field name="id"/>
 	<variable name="TodayDate" class="java.lang.String" calculation="System">
 		<initialValueExpression><![CDATA[new SimpleDateFormat("dd/MM/yy").format(new Date())]]></initialValueExpression>
 	</variable>
@@ -106,6 +106,16 @@
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["ClusterUtilization.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="22" splitType="Stretch">
+			<break>
+				<reportElement x="0" y="1" width="500" height="1"></reportElement>
+			</break>
+			<subreport>
+				<reportElement isPrintRepeatedValues="false" x="0" y="2" width="500" height="20" isRemoveLineWhenBlank="true" backcolor="#FFCC99" uuid="62506c8a-e250-5f4b-826c-693b1df74d11"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["SchemaCount.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 		<band height="22" splitType="Stretch">
