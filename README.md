@@ -11,7 +11,7 @@ consumption Reports.
 
 ## Pre-Requisite
 
-Please follow the Confluent documentation about the Metrics API setup and generating metrics API Key and Secret.  https://docs.confluent.io/cloud/current/monitoring/metrics-api.html
+Please follow the Confluent documentation for Metrics API setup and generating metrics API Key and Secret. https://docs.confluent.io/cloud/current/monitoring/metrics-api.html
 
 
 ## Report Contents
