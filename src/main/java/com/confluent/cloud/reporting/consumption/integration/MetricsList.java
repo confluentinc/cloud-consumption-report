@@ -7,6 +7,7 @@ import com.confluent.cloud.reporting.consumption.model.entity.ClusterMetrics;
 import com.confluent.cloud.reporting.consumption.model.entity.MetricsDefinition;
 import com.confluent.cloud.reporting.consumption.model.rest.*;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -36,6 +37,7 @@ public class MetricsList {
                 new HttpEntity<>(createMetricsRequest(metricsDefinition.getName(), clusterId, clusterType)),
                 new ParameterizedTypeReference<ResponseWrapper<MetricsResponse>>() {
                 }).getBody();
+        if (CollectionUtils.isEmpty(metricsResponse.getData())) return new ArrayList<>();
         return metricsResponse.getData().stream().map(er -> ClusterMetrics.builder()
                 .clusterId(clusterId)
                 .metricsName(metricsDefinition.getMetricsLimit())

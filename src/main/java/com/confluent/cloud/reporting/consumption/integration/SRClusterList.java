@@ -4,6 +4,7 @@ import com.confluent.cloud.reporting.consumption.config.AppConfig;
 import com.confluent.cloud.reporting.consumption.model.entity.SRCluster;
 import com.confluent.cloud.reporting.consumption.model.rest.ResponseWrapper;
 import com.confluent.cloud.reporting.consumption.model.rest.SRResponse;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -31,16 +32,14 @@ public class SRClusterList {
                 new ParameterizedTypeReference<ResponseWrapper<SRResponse>>() {
                 }).getBody();
 
-        if (srResponses != null && srResponses.getData() != null) {
-            return srResponses.getData().stream().map(sr -> SRCluster.builder()
-                    .id(sr.getId())
-                    .createdDate(sr.getMetadata().getCreated_at())
-                    .updatedDate(sr.getMetadata().getUpdated_at())
-                    .kind(sr.getSpec().getType())
-                    .environmentId(environmentId)
-                    .build()
-            ).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
+        if (CollectionUtils.isEmpty(srResponses.getData())) return new ArrayList<>();
+        return srResponses.getData().stream().map(sr -> SRCluster.builder()
+                .id(sr.getId())
+                .createdDate(sr.getMetadata().getCreated_at())
+                .updatedDate(sr.getMetadata().getUpdated_at())
+                .kind(sr.getSpec().getType())
+                .environmentId(environmentId)
+                .build()
+        ).collect(Collectors.toList());
     }
 }

@@ -9,6 +9,10 @@ in-memory database.
 Compares the metrics result with the benchmark limits based on the cluster type and resource allocation and provides the
 consumption Reports.
 
+## Pre-Requisite
+
+Please follow the Confluent documentation about the Metrics API setup and generating metrics API Key and Secret.  https://docs.confluent.io/cloud/current/monitoring/metrics-api.html
+
 
 ## Report Contents
 

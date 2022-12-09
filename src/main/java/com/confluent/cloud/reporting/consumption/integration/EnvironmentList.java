@@ -4,11 +4,13 @@ import com.confluent.cloud.reporting.consumption.config.AppConfig;
 import com.confluent.cloud.reporting.consumption.model.entity.Environment;
 import com.confluent.cloud.reporting.consumption.model.rest.EnvironmentResponse;
 import com.confluent.cloud.reporting.consumption.model.rest.ResponseWrapper;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +31,7 @@ public class EnvironmentList {
                 null,
                 new ParameterizedTypeReference<ResponseWrapper<EnvironmentResponse>>() {
                 }).getBody();
+        if (CollectionUtils.isEmpty(environmentResponses.getData())) return new ArrayList<>();
         return environmentResponses.getData().stream().map(er -> Environment.builder()
                 .id(er.getId())
                 .name(er.getDisplay_name())
