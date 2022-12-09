@@ -11,8 +11,9 @@ consumption Reports.
 
 ## Pre-Requisite
 
-Please follow the Confluent documentation for Metrics API setup and generating metrics API Key and Secret. https://docs.confluent.io/cloud/current/monitoring/metrics-api.html
-
+1. Please follow the Confluent documentation for Metrics API setup and generating metrics API Key and Secret. https://docs.confluent.io/cloud/current/monitoring/metrics-api.html
+2. Java 17+
+3. Docker
 
 ## Report Contents
 
