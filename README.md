@@ -15,6 +15,8 @@ consumption Reports.
 2. Java 17+
 3. Docker
 
+**_NOTE:_** Please use a dedicated Metrics API key for this application as there is a rate limit of 50 requests/min on the api calls.
+
 ## Report Contents
 
 1. List of clusters which have the overall usage of more than 90% (Over utilized clusters)
