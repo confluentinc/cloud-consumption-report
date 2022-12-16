@@ -6,7 +6,6 @@ import com.confluent.cloud.reporting.consumption.model.ClusterType;
 import com.confluent.cloud.reporting.consumption.model.entity.ClusterMetrics;
 import com.confluent.cloud.reporting.consumption.model.entity.MetricsDefinition;
 import com.confluent.cloud.reporting.consumption.model.rest.*;
-import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -23,16 +22,15 @@ import java.util.stream.Collectors;
 public class MetricsList {
     AppConfig appConfig;
 
-    RestTemplate restTemplate;
+    APIIntegration apiIntegration;
 
-    public MetricsList(AppConfig appConfig, RestTemplate restTemplate) {
+    public MetricsList(AppConfig appConfig, APIIntegration apiIntegration) {
         this.appConfig = appConfig;
-        this.restTemplate = restTemplate;
+        this.apiIntegration = apiIntegration;
     }
 
-    @RateLimiter(name = "metrics_rpm_limiter")
     public List<ClusterMetrics> getMetrics(MetricsDefinition metricsDefinition, String clusterId, ClusterType clusterType) {
-        ResponseWrapper<MetricsResponse> metricsResponse = restTemplate.exchange(appConfig.getMetrics().getEndPoint(),
+        ResponseWrapper<MetricsResponse> metricsResponse = apiIntegration.exchangeWithRetry(appConfig.getMetrics().getEndPoint(),
                 HttpMethod.POST,
                 new HttpEntity<>(createMetricsRequest(metricsDefinition.getName(), clusterId, clusterType)),
                 new ParameterizedTypeReference<ResponseWrapper<MetricsResponse>>() {

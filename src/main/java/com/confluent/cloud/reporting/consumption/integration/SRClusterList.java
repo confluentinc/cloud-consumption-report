@@ -8,7 +8,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,15 +17,15 @@ import java.util.stream.Collectors;
 public class SRClusterList {
     AppConfig appConfig;
 
-    RestTemplate restTemplate;
+    APIIntegration apiIntegration;
 
-    public SRClusterList(AppConfig appConfig, RestTemplate restTemplate) {
+    public SRClusterList(AppConfig appConfig, APIIntegration apiIntegration) {
         this.appConfig = appConfig;
-        this.restTemplate = restTemplate;
+        this.apiIntegration = apiIntegration;
     }
 
     public List<SRCluster> getClusters(String environmentId) {
-        ResponseWrapper<SRResponse> srResponses = restTemplate.exchange(String.format(appConfig.getCloudEndPoints().getSrList(), environmentId),
+        ResponseWrapper<SRResponse> srResponses = apiIntegration.exchangeWithRetry(String.format(appConfig.getCloudEndPoints().getSrList(), environmentId),
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<ResponseWrapper<SRResponse>>() {

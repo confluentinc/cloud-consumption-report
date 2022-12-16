@@ -8,7 +8,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,15 +17,15 @@ import java.util.stream.Collectors;
 public class EnvironmentList {
     AppConfig appConfig;
 
-    RestTemplate restTemplate;
+    APIIntegration apiIntegration;
 
-    public EnvironmentList(AppConfig appConfig, RestTemplate restTemplate) {
+    public EnvironmentList(AppConfig appConfig, APIIntegration apiIntegration) {
         this.appConfig = appConfig;
-        this.restTemplate = restTemplate;
+        this.apiIntegration = apiIntegration;
     }
 
     public List<Environment> getEnvironments() {
-        ResponseWrapper<EnvironmentResponse> environmentResponses = restTemplate.exchange(appConfig.getCloudEndPoints().getEnvironmentList(),
+        ResponseWrapper<EnvironmentResponse> environmentResponses = apiIntegration.exchangeWithRetry(appConfig.getCloudEndPoints().getEnvironmentList(),
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<ResponseWrapper<EnvironmentResponse>>() {

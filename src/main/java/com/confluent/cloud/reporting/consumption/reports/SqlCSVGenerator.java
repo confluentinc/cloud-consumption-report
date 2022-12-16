@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import static com.confluent.cloud.reporting.consumption.util.Constants.REPORT_BASE_PATH;
 import static com.confluent.cloud.reporting.consumption.util.Constants.REPORT_SQL_PATH;
 
 @Component

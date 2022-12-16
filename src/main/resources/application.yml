@@ -59,11 +59,15 @@ confluent:
 resilience4j:
   ratelimiter:
     instances:
-      metrics_rpm_limiter:
+      rpm_limiter:
         limitForPeriod: 40
         limitRefreshPeriod: 1m
         timeoutDuration: 1m
-        maxRetryAttempts: 20
+  retry:
+    instances:
+      api_retry:
+        maxRetryAttempts: 3
+        waitDuration: 1m
 
 spring:
   datasource:
