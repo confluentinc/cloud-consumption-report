@@ -15,12 +15,7 @@ consumption Reports.
 2. Java 17+
 3. Docker
 
----
-**NOTE:**
-
-Please use a dedicated Metrics API key for this application as there is a rate limit of 50 requests/min on the api calls.
-
----
+**_NOTE:_** Please use a dedicated Metrics API key for this application as there is a rate limit of 50 requests/min on the api calls.
 
 ## Report Contents
 
@@ -93,12 +88,9 @@ mvn clean install
 ``` SHELL
 java -jar target/cloud-consumption-jasperReports-${version}.jar 
 ```
----
-**NOTE:**
 
-For Option 2 and 3, You will have to install the Open source(GPL) font "Liberation Sans" in the Operating
+**_NOTE:_**  For Option 2 and 3, You will have to install the Open source(GPL) font "Liberation Sans" in the Operating
 System. You can download from [here](https://dl.dafont.com/dl/?f=liberation_sans).
----
 
 ## Use with persistent Datastore
 
