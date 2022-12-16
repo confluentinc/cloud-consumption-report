@@ -1,6 +1,7 @@
 package com.confluent.cloud.reporting.consumption.reports;
 
 import com.confluent.cloud.reporting.consumption.config.AppConfig;
+import com.confluent.cloud.reporting.consumption.model.entity.ClusterMetrics;
 import com.confluent.cloud.reporting.consumption.repository.ClusterMetricsRepository;
 import com.confluent.cloud.reporting.consumption.repository.ClusterRepository;
 import com.confluent.cloud.reporting.consumption.repository.EnvironmentRepository;
@@ -69,9 +70,20 @@ public class JasperPDFGenerator implements IReport {
         parameters.put("Logo", copyResourceToTemp(appConfig.getReporting().getConfluentLogo()));
         parameters.put("ClusterCount", clusterRepository.count());
         parameters.put("EnvironmentCount", environmentRepository.count());
-        parameters.put("minDate", CommonUtils.formatDate(clusterMetricsRepository.findTopByOrderByTimestampAsc().getTimestamp()));
-        parameters.put("maxDate", CommonUtils.formatDate(clusterMetricsRepository.findTopByOrderByTimestampDesc().getTimestamp()));
+        parameters.put("minDate", getFormattedDate(clusterMetricsRepository.findTopByOrderByTimestampAsc()));
+        parameters.put("maxDate", getFormattedDate(clusterMetricsRepository.findTopByOrderByTimestampDesc()));
         return parameters;
+    }
+
+    public String getFormattedDate(ClusterMetrics clusterMetrics){
+        LocalDateTime dateTime = null;
+        if(clusterMetrics == null) {
+            dateTime = LocalDateTime.now();
+        }
+        else {
+            dateTime = clusterMetrics.getTimestamp();
+        }
+        return CommonUtils.formatDate(dateTime);
     }
 
     private void compileReports(Map<String, String> args) throws Exception {
@@ -88,7 +100,7 @@ public class JasperPDFGenerator implements IReport {
 
     private void compileReport(String reportName) throws Exception {
         try {
-            String reportPath = String.format("%s/%s.jrxml", Constants.REPORT_BASE_PATH, reportName);
+            String reportPath = String.format("%s%s.jrxml", Constants.REPORT_BASE_PATH, reportName);
             JasperReport jasperReport = JasperCompileManager.compileReport(new ClassPathResource(reportPath).getInputStream());
             JRSaver.saveObject(jasperReport, getJasperFilePath(reportName));
         } catch (Exception e) {

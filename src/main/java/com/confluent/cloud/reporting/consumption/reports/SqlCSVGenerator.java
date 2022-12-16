@@ -57,7 +57,7 @@ public class SqlCSVGenerator implements IReport {
     }
 
     private String getQuery(String sqlFile) throws IOException {
-        String sqlFilePath = String.format("%s%s%s.sql", REPORT_BASE_PATH, REPORT_SQL_PATH, sqlFile);
+        String sqlFilePath = String.format("%s%s.sql", REPORT_SQL_PATH, sqlFile);
         return IOUtils.toString(new ClassPathResource(sqlFilePath).getInputStream(), StandardCharsets.UTF_8);
     }
 
