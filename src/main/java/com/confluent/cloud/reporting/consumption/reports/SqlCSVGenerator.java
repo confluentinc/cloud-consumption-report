@@ -17,6 +17,9 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+import static com.confluent.cloud.reporting.consumption.util.Constants.REPORT_BASE_PATH;
+import static com.confluent.cloud.reporting.consumption.util.Constants.REPORT_SQL_PATH;
+
 @Component
 @Slf4j
 public class SqlCSVGenerator implements IReport {
@@ -54,7 +57,7 @@ public class SqlCSVGenerator implements IReport {
     }
 
     private String getQuery(String sqlFile) throws IOException {
-        String sqlFilePath = String.format("reports/sql/%s.sql", sqlFile);
+        String sqlFilePath = String.format("%s%s%s.sql", REPORT_BASE_PATH, REPORT_SQL_PATH, sqlFile);
         return IOUtils.toString(new ClassPathResource(sqlFilePath).getInputStream(), StandardCharsets.UTF_8);
     }
 

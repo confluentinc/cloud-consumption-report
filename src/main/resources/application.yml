@@ -60,9 +60,10 @@ resilience4j:
   ratelimiter:
     instances:
       metrics_rpm_limiter:
-        limitForPeriod: 48
+        limitForPeriod: 40
         limitRefreshPeriod: 1m
         timeoutDuration: 1m
+        maxRetryAttempts: 20
 
 spring:
   datasource:
