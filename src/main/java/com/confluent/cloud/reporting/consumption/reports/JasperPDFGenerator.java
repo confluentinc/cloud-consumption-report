@@ -75,12 +75,11 @@ public class JasperPDFGenerator implements IReport {
         return parameters;
     }
 
-    public String getFormattedDate(ClusterMetrics clusterMetrics){
+    public String getFormattedDate(ClusterMetrics clusterMetrics) {
         LocalDateTime dateTime = null;
-        if(clusterMetrics == null) {
+        if (clusterMetrics == null) {
             dateTime = LocalDateTime.now();
-        }
-        else {
+        } else {
             dateTime = clusterMetrics.getTimestamp();
         }
         return CommonUtils.formatDate(dateTime);

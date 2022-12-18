@@ -26,7 +26,7 @@ public class APIIntegration {
     }
 
     @RateLimiter(name = "rpm_limiter")
-    private  <T> ResponseEntity<T> exchange(String url, HttpMethod method, @Nullable HttpEntity<?> requestEntity, ParameterizedTypeReference<T> responseType, Object... uriVariables) throws RestClientException {
+    private <T> ResponseEntity<T> exchange(String url, HttpMethod method, @Nullable HttpEntity<?> requestEntity, ParameterizedTypeReference<T> responseType, Object... uriVariables) throws RestClientException {
         return restTemplate.exchange(url, method, requestEntity, responseType, uriVariables);
     }
 }

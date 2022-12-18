@@ -43,32 +43,44 @@ public class DataLoader {
         List<Environment> environments = environmentList.getEnvironments();
         environmentLoader.loadEnvironments(environments);
         environments.forEach(e -> {
-            loadKafkaClusterData(e);
-            loadSRClusterData(e);
+            try {
+                loadKafkaClusterData(e);
+                loadSRClusterData(e);
+            } catch (Throwable t) {
+                log.error("Skipping Environment {}", e.getName(), t);
+            }
         });
     }
 
-    public void loadConfigurationData(){
+    public void loadConfigurationData() {
         metricsDefinitionLoader.loadMetricsDefinitions();
         metricsLimitLoader.loadMetrics();
         srLimitLoader.loadMetrics();
     }
 
-    public void loadKafkaClusterData(Environment e){
+    public void loadKafkaClusterData(Environment e) {
         List<Cluster> clusters = clusterList.getClusters(e.getId());
         clusterLoader.loadCluster(clusters, e.getId());
         clusters.forEach(cluster -> {
-            log.info("Processing Environment {}, Cluster: {}", e.getName(), cluster.getName());
-            metricsLoader.loadMetrics(cluster.getId(), ClusterType.kafka);
+            try {
+                log.info("Processing Environment {}, Cluster: {}", e.getName(), cluster.getName());
+                metricsLoader.loadMetrics(cluster.getId(), ClusterType.kafka);
+            } catch (Throwable t) {
+                log.error("Skipping metrics load for Environment {}, Cluster: {}", e.getName(), cluster.getName(), t);
+            }
         });
     }
 
-    public void loadSRClusterData(Environment e){
+    public void loadSRClusterData(Environment e) {
         List<SRCluster> srClusters = srClusterList.getClusters(e.getId());
         srClusterLoader.loadCluster(srClusters, e.getId());
         srClusters.forEach(cluster -> {
-            log.info("Processing Environment {}, Schema Registry Cluster: {}", e.getName(), cluster.getId());
-            metricsLoader.loadMetrics(cluster.getId(), ClusterType.schema_registry);
+            try {
+                log.info("Processing Environment {}, Schema Registry Cluster: {}", e.getName(), cluster.getId());
+                metricsLoader.loadMetrics(cluster.getId(), ClusterType.schema_registry);
+            } catch (Throwable t) {
+                log.error("Processing Environment {}, Schema Registry Cluster: {}", e.getName(), cluster.getId(), t);
+            }
         });
     }
 }
