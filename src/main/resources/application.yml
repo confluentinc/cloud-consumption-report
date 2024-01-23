@@ -6,7 +6,7 @@ confluent:
     cloudEndPoints:
       environmentList: https://api.confluent.cloud/org/v2/environments?page_size=100
       clusterList: https://api.confluent.cloud/cmk/v2/clusters?environment=%s&page_size=100
-      srList: https://api.confluent.cloud/stream-governance/v2/clusters?environment=%s&page_size=100
+      srList: https://api.confluent.cloud/srcm/v3/clusters?environment=%s&page_size=100
     metrics:
       endpoint: https://api.telemetry.confluent.cloud/v2/metrics/cloud/query
       definitions:

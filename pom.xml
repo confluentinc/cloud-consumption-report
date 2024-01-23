@@ -18,7 +18,7 @@
         <jasper.version>6.20.0</jasper.version>
         <commons.io.version>2.11.0</commons.io.version>
         <resilience4j.version>1.7.1</resilience4j.version>
-        <opencsv.version>5.7.0</opencsv.version>
+        <opencsv.version>2.3</opencsv.version>
     </properties>
     <dependencies>
         <dependency>
@@ -40,9 +40,9 @@
             <version>${commons.io.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.opencsv</groupId>
+            <groupId>net.sf.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>${opencsv.version}</version>
+            <version>2.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>

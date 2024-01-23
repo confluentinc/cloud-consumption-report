@@ -1,8 +1,8 @@
 package com.confluent.cloud.reporting.consumption.reports;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import com.confluent.cloud.reporting.consumption.config.AppConfig;
 import com.confluent.cloud.reporting.consumption.util.CommonUtils;
-import com.opencsv.CSVWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class SqlCSVGenerator implements IReport {
             CSVWriter csvWriter = new CSVWriter(fileWriter);
             jdbcTemplate.query(getQuery(sqlFile), (ResultSetExtractor<Void>) rs -> {
                 try {
-                    csvWriter.writeAll(rs, true, true, false);
+                    csvWriter.writeAll(rs, true);
                 } catch (IOException e) {
                     throw new RuntimeException("Error in reading the recordset", e);
                 }

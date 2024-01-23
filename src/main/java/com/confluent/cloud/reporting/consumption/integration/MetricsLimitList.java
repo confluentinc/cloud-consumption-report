@@ -1,8 +1,8 @@
 package com.confluent.cloud.reporting.consumption.integration;
 
+import au.com.bytecode.opencsv.CSVReader;
 import com.confluent.cloud.reporting.consumption.config.AppConfig;
 import com.confluent.cloud.reporting.consumption.model.entity.MetricsLimit;
-import com.opencsv.CSVReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
