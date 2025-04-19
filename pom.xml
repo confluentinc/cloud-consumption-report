@@ -16,7 +16,7 @@
     <properties>
         <java.version>17</java.version>
         <jasper.version>6.20.0</jasper.version>
-        <commons.io.version>2.11.0</commons.io.version>
+        <commons.io.version>2.14.0</commons.io.version>
         <resilience4j.version>1.7.1</resilience4j.version>
         <opencsv.version>2.3</opencsv.version>
     </properties>
